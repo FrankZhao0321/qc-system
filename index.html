@@ -546,19 +546,19 @@
         <div class="modal-content">
             <div class="modal-header">新建设备</div>
             <div class="form-group">
-                <label>设备编号</label>
+                <label for="deviceNumber">设备编号</label>
                 <input type="text" id="deviceNumber" placeholder="例如：CNC-2024-001">
             </div>
             <div class="form-group">
-                <label>型号</label>
+                <label for="deviceModel">型号</label>
                 <input type="text" id="deviceModel" placeholder="例如：XK7132">
             </div>
             <div class="form-group">
-                <label>客户</label>
+                <label for="deviceCustomer">客户</label>
                 <input type="text" id="deviceCustomer" placeholder="客户名称">
             </div>
             <div class="form-group">
-                <label>订单号</label>
+                <label for="deviceOrder">订单号</label>
                 <input type="text" id="deviceOrder" placeholder="订单号">
             </div>
             <div class="modal-footer">
@@ -573,15 +573,15 @@
         <div class="modal-content">
             <div class="modal-header">添加检测项</div>
             <div class="form-group">
-                <label>检测项目</label>
+                <label for="assemblyItem">检测项目</label>
                 <input type="text" id="assemblyItem" placeholder="例如：主轴安装精度">
             </div>
             <div class="form-group">
-                <label>描述</label>
+                <label for="assemblyDesc">描述</label>
                 <textarea id="assemblyDesc" placeholder="请详细描述检测内容和要求"></textarea>
             </div>
             <div class="form-group">
-                <label>检测员</label>
+                <label for="assemblyInspector">检测员</label>
                 <input type="text" id="assemblyInspector" placeholder="检测员姓名">
             </div>
             <div class="modal-footer">
@@ -596,22 +596,22 @@
         <div class="modal-content">
             <div class="modal-header">添加测试项</div>
             <div class="form-group">
-                <label>测试项目</label>
+                <label for="testItem">测试项目</label>
                 <input type="text" id="testItem" placeholder="例如：定位精度测试">
             </div>
             <div class="form-group">
-                <label>检测标准</label>
+                <label for="testStandard">检测标准</label>
                 <textarea id="testStandard" placeholder="请输入检测标准和要求"></textarea>
             </div>
             <div class="form-group">
-                <label>测试结果</label>
+                <label for="testResult">测试结果</label>
                 <select id="testResult">
                     <option value="pass">通过</option>
                     <option value="fail">不通过</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>测试员</label>
+                <label for="testTester">测试员</label>
                 <input type="text" id="testTester" placeholder="测试员姓名">
             </div>
             <div class="modal-footer">
@@ -626,11 +626,11 @@
         <div class="modal-content">
             <div class="modal-header">添加清点项</div>
             <div class="form-group">
-                <label>项目名称</label>
+                <label for="shippingItem">项目名称</label>
                 <input type="text" id="shippingItem" placeholder="例如：φ10mm立铣刀">
             </div>
             <div class="form-group">
-                <label>类型</label>
+                <label for="shippingType">类型</label>
                 <select id="shippingType">
                     <option value="tool">刀具</option>
                     <option value="accessory">附件</option>
@@ -638,11 +638,11 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>要求数量</label>
+                <label for="shippingRequired">要求数量</label>
                 <input type="number" id="shippingRequired" placeholder="要求数量">
             </div>
             <div class="form-group">
-                <label>清点员</label>
+                <label for="shippingChecker">清点员</label>
                 <input type="text" id="shippingChecker" placeholder="清点员姓名">
             </div>
             <div class="modal-footer">
@@ -657,11 +657,11 @@
         <div class="modal-content">
             <div class="modal-header">清点确认</div>
             <div class="form-group">
-                <label>实际数量</label>
+                <label for="shippingActual">实际数量</label>
                 <input type="number" id="shippingActual" placeholder="实际清点数量">
             </div>
             <div class="form-group">
-                <label>清点状态</label>
+                <label for="shippingStatus">清点状态</label>
                 <select id="shippingStatus">
                     <option value="matched">数量一致</option>
                     <option value="mismatch">数量不符</option>
@@ -679,7 +679,7 @@
         <div class="modal-content">
             <div class="modal-header">提交反馈</div>
             <div class="form-group">
-                <label>反馈类型</label>
+                <label for="feedbackType">反馈类型</label>
                 <select id="feedbackType">
                     <option value="quality">质量问题</option>
                     <option value="performance">性能问题</option>
@@ -688,7 +688,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>评分</label>
+                <label for="feedbackRating">评分</label>
                 <select id="feedbackRating">
                     <option value="5">⭐⭐⭐⭐⭐</option>
                     <option value="4">⭐⭐⭐⭐</option>
@@ -698,11 +698,11 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>详细描述</label>
+                <label for="feedbackDesc">详细描述</label>
                 <textarea id="feedbackDesc" placeholder="请详细描述您的问题或建议"></textarea>
             </div>
             <div class="form-group">
-                <label>您的姓名</label>
+                <label for="feedbackCustomer">您的姓名</label>
                 <input type="text" id="feedbackCustomer" placeholder="请输入您的姓名">
             </div>
             <div class="modal-footer">
@@ -717,11 +717,11 @@
         <div class="modal-content">
             <div class="modal-header">添加改进建议</div>
             <div class="form-group">
-                <label>改进建议</label>
+                <label for="suggestionText">改进建议</label>
                 <textarea id="suggestionText" placeholder="请输入改进建议"></textarea>
             </div>
             <div class="form-group">
-                <label>优先级</label>
+                <label for="suggestionPriority">优先级</label>
                 <select id="suggestionPriority">
                     <option value="high">高</option>
                     <option value="medium">中</option>
