@@ -887,9 +887,7 @@ function renderRecordsList(data) {
     `;
 }
 
-document.addEventListener('load', () => {
-    console.log('页面加载完成，开始初始化...');
-    console.log('window.supabase 类型:', typeof window.supabase);
-    console.log('window.supabase 是否存在:', typeof window.supabase !== 'undefined');
-    init();
-});
+console.log('页面加载完成，开始初始化...');
+console.log('window.supabase 类型:', typeof window.supabase);
+console.log('window.supabase 是否存在:', typeof window.supabase !== 'undefined');
+init();
