@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1890ff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="品控系统">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="https://via.placeholder.com/192.png">
     <title>奥领数控 - 全过程品控系统</title>
     <style>
         * {
@@ -736,6 +742,20 @@
     </div>
 
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        // 注册 Service Worker（PWA 支持）
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker 注册成功:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker 注册失败:', error);
+                    });
+            });
+        }
+    </script>
     <script src="app-supabase.js"></script>
 </body>
 </html>

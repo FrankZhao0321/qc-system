@@ -1,0 +1,21 @@
+{
+  "name": "奥领数控品控系统",
+  "short_name": "品控系统",
+  "description": "奥领数控机器有限公司全过程品控系统",
+  "start_url": "/index-new.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1890ff",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

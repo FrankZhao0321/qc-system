@@ -804,4 +804,4 @@ function renderRecordsList(data) {
     `;
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('load', init);
