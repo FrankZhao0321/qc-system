@@ -37,17 +37,32 @@ const priorityMap = {
 };
 
 async function init() {
-    try {
-        if (typeof window.supabase === 'undefined') {
-            throw new Error('Supabase 库未加载');
+    let retries = 0;
+    const maxRetries = 5;
+    const retryDelay = 500; // 500ms
+    
+    while (retries < maxRetries) {
+        try {
+            if (typeof window.supabase === 'undefined') {
+                throw new Error('Supabase 库未加载');
+            }
+            
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase 客户端初始化成功');
+            await loadDevices();
+            return;
+        } catch (error) {
+            retries++;
+            console.log(`初始化尝试 ${retries}/${maxRetries} 失败:`, error.message);
+            
+            if (retries >= maxRetries) {
+                console.error('初始化失败:', error);
+                showError('系统初始化失败：' + error.message);
+                return;
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
         }
-        
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        console.log('Supabase 客户端初始化成功');
-        await loadDevices();
-    } catch (error) {
-        console.error('初始化失败:', error);
-        showError('系统初始化失败：' + error.message);
     }
 }
 
@@ -81,6 +96,10 @@ function showPage(pageId) {
     event.target.classList.add('active');
     
     if (pageId === 'devices') {
+        if (!supabaseClient) {
+            showError('系统正在初始化，请稍后重试');
+            return;
+        }
         loadDevices();
     }
 }
