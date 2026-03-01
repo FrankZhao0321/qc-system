@@ -204,6 +204,11 @@ async function createDevice() {
         return;
     }
     
+    if (!supabaseClient) {
+        showError('系统正在初始化，请稍后重试');
+        return;
+    }
+    
     try {
         const { data, error } = await supabaseClient
             .from('devices')
@@ -270,6 +275,11 @@ async function createAssemblyCheck() {
         return;
     }
     
+    if (!supabaseClient) {
+        showError('系统正在初始化，请稍后重试');
+        return;
+    }
+    
     try {
         const { error } = await supabaseClient
             .from('assembly_checks')
@@ -298,6 +308,11 @@ async function createAssemblyCheck() {
 }
 
 async function updateAssemblyStatus(checkId, status) {
+    if (!supabaseClient) {
+        showError('系统正在初始化，请稍后重试');
+        return;
+    }
+    
     try {
         const { error } = await supabaseClient
             .from('assembly_checks')
@@ -353,6 +368,11 @@ async function createTestReport() {
         return;
     }
     
+    if (!supabaseClient) {
+        showError('系统正在初始化，请稍后重试');
+        return;
+    }
+    
     try {
         const { error } = await supabaseClient
             .from('test_reports')
@@ -383,6 +403,11 @@ async function createTestReport() {
 }
 
 async function confirmTestReport(reportId) {
+    if (!supabaseClient) {
+        showError('系统正在初始化，请稍后重试');
+        return;
+    }
+    
     const confirmed = confirm('点击"确定"确认通过，点击"取消"确认不通过');
     
     try {
@@ -468,6 +493,11 @@ async function createShippingCheck() {
         return;
     }
     
+    if (!supabaseClient) {
+        showError('系统正在初始化，请稍后重试');
+        return;
+    }
+    
     try {
         const { error } = await supabaseClient
             .from('shipping_checks')
@@ -504,6 +534,11 @@ function showShippingConfirm(checkId) {
 }
 
 async function confirmShipping() {
+    if (!supabaseClient) {
+        showError('系统正在初始化，请稍后重试');
+        return;
+    }
+    
     const actual = parseInt(document.getElementById('shippingActual').value);
     const status = document.getElementById('shippingStatus').value;
     
@@ -569,6 +604,11 @@ function renderStatusActions(device) {
 }
 
 async function updateDeviceStatus(newStatus) {
+    if (!supabaseClient) {
+        showError('系统正在初始化，请稍后重试');
+        return;
+    }
+    
     const confirmed = confirm(`确认将设备状态更新为：${statusMap[newStatus].text}？`);
     if (!confirmed) return;
     
@@ -592,6 +632,11 @@ async function searchDevice() {
     const deviceNumber = document.getElementById('searchDeviceNumber').value.trim();
     if (!deviceNumber) {
         showError('请输入设备编号');
+        return;
+    }
+    
+    if (!supabaseClient) {
+        showError('系统正在初始化，请稍后重试');
         return;
     }
     
@@ -727,6 +772,11 @@ function renderSuggestionList(suggestions) {
 }
 
 async function updateSuggestionStatus(suggestionId, newStatus) {
+    if (!supabaseClient) {
+        showError('系统正在初始化，请稍后重试');
+        return;
+    }
+    
     try {
         const { error } = await supabaseClient
             .from('improvement_suggestions')
