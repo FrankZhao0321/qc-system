@@ -38,8 +38,8 @@ const priorityMap = {
 
 async function init() {
     let retries = 0;
-    const maxRetries = 5;
-    const retryDelay = 500; // 500ms
+    const maxRetries = 10; // 增加到 10 次
+    const retryDelay = 1000; // 增加到 1 秒
     
     while (retries < maxRetries) {
         try {
@@ -57,7 +57,7 @@ async function init() {
             
             if (retries >= maxRetries) {
                 console.error('初始化失败:', error);
-                showError('系统初始化失败：' + error.message);
+                showError('系统初始化失败：' + error.message + '。请刷新页面重试。');
                 return;
             }
             
