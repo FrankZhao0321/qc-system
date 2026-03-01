@@ -205,7 +205,7 @@ async function createDevice() {
     }
     
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('devices')
             .insert([{
                 device_number: deviceNumber,
@@ -271,7 +271,7 @@ async function createAssemblyCheck() {
     }
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('assembly_checks')
             .insert([{
                 device_id: currentDeviceId,
@@ -299,7 +299,7 @@ async function createAssemblyCheck() {
 
 async function updateAssemblyStatus(checkId, status) {
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('assembly_checks')
             .update({ status: status })
             .eq('id', checkId);
@@ -354,7 +354,7 @@ async function createTestReport() {
     }
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('test_reports')
             .insert([{
                 device_id: currentDeviceId,
@@ -386,7 +386,7 @@ async function confirmTestReport(reportId) {
     const confirmed = confirm('点击"确定"确认通过，点击"取消"确认不通过');
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('test_reports')
             .update({ confirmed: confirmed })
             .eq('id', reportId);
@@ -469,7 +469,7 @@ async function createShippingCheck() {
     }
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('shipping_checks')
             .insert([{
                 device_id: currentDeviceId,
@@ -513,7 +513,7 @@ async function confirmShipping() {
     }
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('shipping_checks')
             .update({
                 actual_quantity: actual,
@@ -573,7 +573,7 @@ async function updateDeviceStatus(newStatus) {
     if (!confirmed) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('devices')
             .update({ status: newStatus, updated_at: new Date().toISOString() })
             .eq('id', currentDeviceId);
@@ -596,7 +596,7 @@ async function searchDevice() {
     }
     
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('devices')
             .select('*')
             .eq('device_number', deviceNumber)
@@ -728,7 +728,7 @@ function renderSuggestionList(suggestions) {
 
 async function updateSuggestionStatus(suggestionId, newStatus) {
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('improvement_suggestions')
             .update({ status: newStatus })
             .eq('id', suggestionId);
