@@ -9,6 +9,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 let supabaseClient = null;
 let currentDeviceId = null;
 let currentShippingId = null;
+let isInitialized = false;
 
 const statusMap = {
     assembling: { text: '组装中', class: 'badge-blue' },
@@ -48,6 +49,7 @@ async function init() {
             }
             
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            isInitialized = true;
             console.log('Supabase 客户端初始化成功');
             await loadDevices();
             return;
@@ -67,8 +69,8 @@ async function init() {
 }
 
 async function loadDevices() {
-    if (!supabaseClient) {
-        console.error('Supabase 客户端未初始化');
+    if (!isInitialized) {
+        console.error('系统正在初始化，请稍后重试');
         showError('系统正在初始化，请稍后重试');
         return;
     }
@@ -96,7 +98,7 @@ function showPage(pageId) {
     event.target.classList.add('active');
     
     if (pageId === 'devices') {
-        if (!supabaseClient) {
+        if (!isInitialized) {
             showError('系统正在初始化，请稍后重试');
             return;
         }
@@ -233,7 +235,7 @@ async function createDevice() {
         return;
     }
     
-    if (!supabaseClient) {
+    if (!isInitialized) {
         showError('系统正在初始化，请稍后重试');
         return;
     }
@@ -304,7 +306,7 @@ async function createAssemblyCheck() {
         return;
     }
     
-    if (!supabaseClient) {
+    if (!isInitialized) {
         showError('系统正在初始化，请稍后重试');
         return;
     }
@@ -337,7 +339,7 @@ async function createAssemblyCheck() {
 }
 
 async function updateAssemblyStatus(checkId, status) {
-    if (!supabaseClient) {
+    if (!isInitialized) {
         showError('系统正在初始化，请稍后重试');
         return;
     }
@@ -397,7 +399,7 @@ async function createTestReport() {
         return;
     }
     
-    if (!supabaseClient) {
+    if (!isInitialized) {
         showError('系统正在初始化，请稍后重试');
         return;
     }
@@ -432,7 +434,7 @@ async function createTestReport() {
 }
 
 async function confirmTestReport(reportId) {
-    if (!supabaseClient) {
+    if (!isInitialized) {
         showError('系统正在初始化，请稍后重试');
         return;
     }
@@ -522,7 +524,7 @@ async function createShippingCheck() {
         return;
     }
     
-    if (!supabaseClient) {
+    if (!isInitialized) {
         showError('系统正在初始化，请稍后重试');
         return;
     }
@@ -563,7 +565,7 @@ function showShippingConfirm(checkId) {
 }
 
 async function confirmShipping() {
-    if (!supabaseClient) {
+    if (!isInitialized) {
         showError('系统正在初始化，请稍后重试');
         return;
     }
@@ -633,7 +635,7 @@ function renderStatusActions(device) {
 }
 
 async function updateDeviceStatus(newStatus) {
-    if (!supabaseClient) {
+    if (!isInitialized) {
         showError('系统正在初始化，请稍后重试');
         return;
     }
@@ -664,7 +666,7 @@ async function searchDevice() {
         return;
     }
     
-    if (!supabaseClient) {
+    if (!isInitialized) {
         showError('系统正在初始化，请稍后重试');
         return;
     }
@@ -801,7 +803,7 @@ function renderSuggestionList(suggestions) {
 }
 
 async function updateSuggestionStatus(suggestionId, newStatus) {
-    if (!supabaseClient) {
+    if (!isInitialized) {
         showError('系统正在初始化，请稍后重试');
         return;
     }
