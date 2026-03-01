@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奥领数控品控系统</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1890ff;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .loading {
+            background: #e6f7ff;
+            color: #1890ff;
+        }
+        .success {
+            background: #f6ffed;
+            color: #52c41a;
+        }
+        .error {
+            background: #fff2f0;
+            color: #ff4d4f;
+        }
+        .device-list {
+            margin-top: 20px;
+        }
+        .device-item {
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 4px solid #1890ff;
+        }
+        .button {
+            background: #1890ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>奥领数控品控系统</h1>
+        
+        <div id="status" class="status loading">
+            正在加载系统...
+        </div>
+        
+        <div id="deviceList" class="device-list"></div>
+        
+        <button class="button" onclick="location.href='index.html'">返回主页面</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://cjlppzltsaroblzqutra.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqbHBwemx0c2Fyb2JsenF1dHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMTY4NDcsImV4cCI6MjA4Nzg5Mjg0N30.jWZM-TnRR-8VHSdO3vvWTmlRMzEargQUS7tE7d9-IrI';
+        
+        async function loadSystem() {
+            const statusDiv = document.getElementById('status');
+            const deviceListDiv = document.getElementById('deviceList');
+            
+            try {
+                // 检查 Supabase 是否加载
+                if (typeof window.supabase === 'undefined') {
+                    throw new Error('Supabase 库未加载');
+                }
+                
+                statusDiv.innerHTML = '正在连接数据库...';
+                
+                // 创建客户端
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // 测试连接
+                const { data, error } = await supabase
+                    .from('devices')
+                    .select('count', { count: 'exact', head: true });
+                
+                if (error) {
+                    throw error;
+                }
+                
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '✓ 系统加载成功！数据库中有 ' + (data || 0) + ' 个设备';
+                
+                // 加载设备列表
+                const { data: devices, error: devicesError } = await supabase
+                    .from('devices')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (devicesError) {
+                    throw devicesError;
+                }
+                
+                if (!devices || devices.length === 0) {
+                    deviceListDiv.innerHTML = '<p>暂无设备数据</p>';
+                } else {
+                    deviceListDiv.innerHTML = devices.map(device => `
+                        <div class="device-item">
+                            <strong>${device.device_number}</strong><br>
+                            型号：${device.model}<br>
+                            客户：${device.customer}<br>
+                            订单号：${device.order_number}<br>
+                            状态：${device.status}
+                        </div>
+                    `).join('');
+                }
+                
+            } catch (error) {
+                console.error('错误:', error);
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '✗ 加载失败：' + error.message;
+                
+                if (error.code === '42P01') {
+                    statusDiv.innerHTML += '<br><br>提示：数据库表不存在，请在 Supabase SQL Editor 中执行 database.sql 脚本';
+                }
+            }
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', loadSystem);
+    </script>
+</body>
+</html>

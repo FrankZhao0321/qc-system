@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配置工具 - 奥领数控品控系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 80px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .success {
+            background: #52c41a;
+        }
+
+        .success-message {
+            display: none;
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            color: #52c41a;
+        }
+
+        .error-message {
+            display: none;
+            background: #fff1f0;
+            border: 1px solid #ffa39e;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            color: #ff4d4f;
+        }
+
+        .steps {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .step {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .step:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #52c41a;
+            font-weight: bold;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 配置工具</h1>
+        <p class="subtitle">自动配置 Supabase 连接信息</p>
+
+        <div class="form-group">
+            <label for="supabaseUrl">Supabase Project URL</label>
+            <input 
+                type="text" 
+                id="supabaseUrl" 
+                placeholder="https://xxxxxxxxxxxxx.supabase.co"
+            >
+            <p class="help-text">
+                从 Supabase Dashboard → Settings → API 获取
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="supabaseKey">Supabase anon public key</label>
+            <textarea 
+                id="supabaseKey" 
+                placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            ></textarea>
+            <p class="help-text">
+                从 Supabase Dashboard → Settings → API 获取
+            </p>
+        </div>
+
+        <button class="btn" onclick="configure()">自动配置</button>
+
+        <div id="successMessage" class="success-message">
+            <strong>✅ 配置成功！</strong>
+            <p>已自动替换 app-supabase.js 中的配置信息</p>
+        </div>
+
+        <div id="errorMessage" class="error-message">
+            <strong>❌ 配置失败</strong>
+            <p id="errorText"></p>
+        </div>
+
+        <div id="steps" class="steps">
+            <h3>下一步：</h3>
+            <div class="step">在浏览器中打开 index.html</div>
+            <div class="step">检查是否能看到设备列表</div>
+            <div class="step">测试创建新设备</div>
+            <div class="step">刷新页面，检查数据是否保存</div>
+            <div class="step">
+                <a href="index.html" target="_blank">打开品控系统 →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function configure() {
+            const url = document.getElementById('supabaseUrl').value.trim();
+            const key = document.getElementById('supabaseKey').value.trim();
+            const successDiv = document.getElementById('successMessage');
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            const stepsDiv = document.getElementById('steps');
+
+            // 隐藏之前的消息
+            successDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            stepsDiv.style.display = 'none';
+
+            // 验证输入
+            if (!url || !key) {
+                errorText.textContent = '请填写完整的配置信息';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // 验证 URL 格式
+            if (!url.match(/^https:\/\/.*\.supabase\.co$/)) {
+                errorText.textContent = 'URL 格式不正确，正确格式：https://xxxxxxxxxxxxx.supabase.co';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // 验证 Key 格式
+            if (!key.startsWith('eyJ')) {
+                errorText.textContent = 'Key 格式可能不正确，应该以 eyJ 开头';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // 读取 app-supabase.js 文件
+            fetch('app-supabase.js')
+                .then(response => response.text())
+                .then(content => {
+                    // 替换配置
+                    let newContent = content
+                        .replace(/YOUR_SUPABASE_URL/g, url)
+                        .replace(/YOUR_SUPABASE_ANON_KEY/g, key);
+
+                    // 创建 Blob 并下载
+                    const blob = new Blob([newContent], { type: 'text/javascript' });
+                    const downloadUrl = URL.createObjectURL(blob);
+                    
+                    // 创建下载链接
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = 'app-supabase.js';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(downloadUrl);
+
+                    // 显示成功消息
+                    successDiv.style.display = 'block';
+                    stepsDiv.style.display = 'block';
+
+                    // 保存配置到 localStorage（用于验证）
+                    localStorage.setItem('supabaseConfigured', 'true');
+                })
+                .catch(error => {
+                    errorText.textContent = '读取文件失败：' + error.message;
+                    errorDiv.style.display = 'block';
+                });
+        }
+
+        // 检查是否已配置
+        window.onload = function() {
+            if (localStorage.getItem('supabaseConfigured') === 'true') {
+                document.getElementById('steps').style.display = 'block';
+            }
+        };
+    </script>
+</body>
+</html>

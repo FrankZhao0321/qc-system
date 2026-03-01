@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>直接测试 - 奥领数控品控系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .success {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            color: #52c41a;
+        }
+
+        .error {
+            background: #fff1f0;
+            border: 1px solid #ffa39e;
+            color: #ff4d4f;
+        }
+
+        .info {
+            background: #e6f7ff;
+            border: 1px solid #91d5ff;
+            color: #1890ff;
+        }
+
+        .device-list {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 4px;
+        }
+
+        .device-item {
+            padding: 10px;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .device-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #52c41a;
+            margin-top: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 直接测试</h1>
+        <p class="subtitle">测试 Supabase 连接和数据加载</p>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>正在测试...</p>
+        </div>
+
+        <div class="section">
+            <h2>1. Supabase 配置</h2>
+            <div id="configStatus" class="status info">检查中...</div>
+        </div>
+
+        <div class="section">
+            <h2>2. 数据库连接</h2>
+            <div id="connectionStatus" class="status info">检查中...</div>
+        </div>
+
+        <div class="section">
+            <h2>3. 数据库表</h2>
+            <div id="tableStatus" class="status info">检查中...</div>
+        </div>
+
+        <div class="section">
+            <h2>4. 设备数据</h2>
+            <div id="dataStatus" class="status info">检查中...</div>
+            <div id="deviceList" class="device-list" style="display: none;"></div>
+        </div>
+
+        <button class="btn" onclick="runTests()">开始测试</button>
+        <button class="btn btn-secondary" onclick="window.open('index.html', '_blank')">打开主系统</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        async function runTests() {
+            const loading = document.getElementById('loading');
+            const configStatus = document.getElementById('configStatus');
+            const connectionStatus = document.getElementById('connectionStatus');
+            const tableStatus = document.getElementById('tableStatus');
+            const dataStatus = document.getElementById('dataStatus');
+            const deviceList = document.getElementById('deviceList');
+
+            loading.style.display = 'block';
+
+            try {
+                const scriptContent = await fetch('app-supabase.js').then(r => r.text());
+                
+                if (scriptContent.includes('YOUR_SUPABASE_URL') || scriptContent.includes('YOUR_SUPABASE_ANON_KEY')) {
+                    configStatus.className = 'status error';
+                    configStatus.textContent = '❌ 配置未完成 - 请先配置 Supabase';
+                    loading.style.display = 'none';
+                    return;
+                }
+
+                const urlMatch = scriptContent.match(/SUPABASE_URL = '([^']+)'/);
+                const keyMatch = scriptContent.match(/SUPABASE_ANON_KEY = '([^']+)'/);
+
+                if (!urlMatch || !keyMatch) {
+                    configStatus.className = 'status error';
+                    configStatus.textContent = '❌ 配置格式错误';
+                    loading.style.display = 'none';
+                    return;
+                }
+
+                const url = urlMatch[1];
+                const key = keyMatch[1];
+
+                configStatus.className = 'status success';
+                configStatus.textContent = '✅ 配置正常 - URL: ' + url.substring(0, 30) + '...';
+
+                const supabase = window.supabase.createClient(url, key);
+
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                const { data: connData, error: connError } = await supabase
+                    .from('devices')
+                    .select('count')
+                    .limit(1);
+
+                if (connError) {
+                    connectionStatus.className = 'status error';
+                    connectionStatus.textContent = '❌ 连接失败 - ' + connError.message;
+                    loading.style.display = 'none';
+                    return;
+                }
+
+                connectionStatus.className = 'status success';
+                connectionStatus.textContent = '✅ 连接成功';
+
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                const { data: tableData, error: tableError } = await supabase
+                    .from('devices')
+                    .select('*')
+                    .limit(1);
+
+                if (tableError) {
+                    if (tableError.code === '42P01') {
+                        tableStatus.className = 'status error';
+                        tableStatus.textContent = '❌ 表不存在 - 请在 Supabase SQL Editor 中执行 database.sql';
+                    } else {
+                        tableStatus.className = 'status error';
+                        tableStatus.textContent = '❌ 表查询失败 - ' + tableError.message;
+                    }
+                    loading.style.display = 'none';
+                    return;
+                }
+
+                tableStatus.className = 'status success';
+                tableStatus.textContent = '✅ 表存在';
+
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                const { data, error } = await supabase
+                    .from('devices')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    dataStatus.className = 'status error';
+                    dataStatus.textContent = '❌ 数据加载失败 - ' + error.message;
+                    loading.style.display = 'none';
+                    return;
+                }
+
+                const deviceCount = data ? data.length : 0;
+
+                if (deviceCount === 0) {
+                    dataStatus.className = 'status error';
+                    dataStatus.textContent = '❌ 没有设备数据 - 请在 Supabase SQL Editor 中插入测试数据';
+                    deviceList.style.display = 'none';
+                } else {
+                    dataStatus.className = 'status success';
+                    dataStatus.textContent = '✅ 数据加载成功 - 共 ' + deviceCount + ' 台设备';
+                    
+                    deviceList.style.display = 'block';
+                    deviceList.innerHTML = data.map((device, index) => `
+                        <div class="device-item">
+                            <span><strong>${index + 1}.</strong> ${device.device_number}</span>
+                            <span>${device.model} - ${device.status}</span>
+                        </div>
+                    `).join('');
+                }
+
+                loading.style.display = 'none';
+
+            } catch (error) {
+                console.error('测试过程出错:', error);
+                loading.style.display = 'none';
+                alert('测试过程出错: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
