@@ -736,6 +736,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
+    <script>
+        console.log('index.html 中的 script 标签已执行');
+        console.log('window.supabase 是否存在:', typeof window.supabase !== 'undefined');
+    </script>
     <script src="app-supabase.js"></script>
 </body>
 </html>

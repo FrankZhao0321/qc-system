@@ -2,6 +2,8 @@
 // 奥领数控品控系统 - Supabase 版本
 // ========================================
 
+console.log('app-supabase.js 文件已加载');
+
 // Supabase 配置 - 请替换为您的实际配置
 const SUPABASE_URL = 'https://cjlppzltsaroblzqutra.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqbHBwemx0c2Fyb2JsenF1dHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMTY4NDcsImV4cCI6MjA4Nzg5Mjg0N30.jWZM-TnRR-8VHSdO3vvWTmlRMzEargQUS7tE7d9-IrI';
